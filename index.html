@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>World TV</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">▶</span><b>World TV</b></div>
+  <nav><button class="nav active" data-filter="all">Home</button><button class="nav" data-filter="favorites">My TV</button></nav>
+  <div class="top-actions"><input id="search" placeholder="Search channels..." type="search"><button id="searchBtn">⌕</button><button id="profile">●</button></div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="hero-content">
+    <div class="eyebrow">LIVE TELEVISION</div>
+    <h1 id="heroTitle">World TV</h1>
+    <p id="heroDesc">Thousands of live channels from around the world.</p>
+    <div class="hero-actions"><button id="heroPlay" class="primary">▶ Watch Now</button><button id="heroFav" class="secondary">＋ Add to My TV</button></div>
+  </div>
+  <div class="hero-gradient"></div>
+</section>
+
+<section class="player-section">
+  <div class="section-head"><div><span class="live-dot"></span><b id="nowName">Select a channel</b><small id="nowMeta"> Live player</small></div><button id="fullscreen">⛶</button></div>
+  <div class="player"><video id="video" controls playsinline></video><div id="overlay"><div class="big-play">▶</div><b>Select a channel</b><span>Choose any channel below to start watching</span></div></div>
+  <div id="error" class="error hidden"></div>
+</section>
+
+<section class="controls">
+  <div class="chips">
+    <button class="chip active" data-country="">All</button>
+    <select id="country"><option value="">Country</option></select>
+    <select id="category"><option value="">Category</option></select>
+    <button class="chip" id="favChip">★ My TV</button>
+  </div>
+  <select id="sort"><option value="name">A–Z</option><option value="country">Country</option><option value="category">Category</option></select>
+</section>
+
+<section class="row-title"><h2>Live Channels</h2><span id="resultCount">Loading…</span></section>
+<section id="grid" class="channel-grid"></section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.6.13/dist/hls.min.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
