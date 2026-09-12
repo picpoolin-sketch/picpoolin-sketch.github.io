@@ -23,9 +23,27 @@
   <div class="hero-gradient"></div>
 </section>
 
-<section class="player-section">
-  <div class="section-head"><div><span class="live-dot"></span><b id="nowName">Select a channel</b><small id="nowMeta"> Live player</small></div><button id="fullscreen">⛶</button></div>
-  <div class="player"><video id="video" controls playsinline></video><div id="overlay"><div class="big-play">▶</div><b>Select a channel</b><span>Choose any channel below to start watching</span></div></div>
+<section class="player-section" id="playerSection">
+  <div class="section-head">
+    <div>
+      <span class="live-dot"></span>
+      <b id="nowName">Select a channel</b>
+      <small id="nowMeta"> Live player</small>
+    </div>
+    <div class="player-controls">
+      <button id="prevBtn" title="Previous Channel">◄</button>
+      <button id="nextBtn" title="Next Channel">►</button>
+      <button id="fullscreen" title="Fullscreen">⛶</button>
+    </div>
+  </div>
+  <div class="player">
+    <video id="video" controls playsinline></video>
+    <div id="overlay">
+      <div class="big-play">▶</div>
+      <b>Select a channel</b>
+      <span>Choose any channel below to start watching</span>
+    </div>
+  </div>
   <div id="error" class="error hidden"></div>
 </section>
 
