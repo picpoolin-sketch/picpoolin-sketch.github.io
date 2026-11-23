@@ -32,12 +32,42 @@ function save(){localStorage.setItem("worldtv:fav",JSON.stringify([...favorites]
 function esc(s=""){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function logo(id){let a=logos.get(id)||[];return (a.find(x=>x.in_use)||a[0])?.url||""}
 
+// Every channel has a stable shareable URL based on its iptv-org channel ID.
+function channelUrl(id) {
+  const url = new URL(window.location.href);
+  url.searchParams.set("channel", id);
+  return url.toString();
+}
+
+function updateChannelUrl(id) {
+  const url = new URL(window.location.href);
+  url.searchParams.set("channel", id);
+  window.history.replaceState({channel:id}, "", url);
+}
+
 function createChannelCard(c) {
   const d=document.createElement("article");
   d.className="channel"+(selected===c.id?" selected":"");
   let l=logo(c.id), cn=countries.get(c.country)?.name||c.country||"Unknown", cat=(c.categories||[])[0]||"General";
-  d.innerHTML=`<button class="star">${favorites.has(c.id)?"★":"☆"}</button>${l?`<img class="logo" src="${esc(l)}" onerror="this.outerHTML='<div class=\\'logo-fallback\\'>${esc(c.name[0]||"T")}</div>'">`:`<div class="logo-fallback">${esc(c.name[0]||"T")}</div>`}<div class="card-info"><div class="channel-name">${esc(c.name)}</div><div class="meta">${esc(cn)} · ${esc(cat)}</div></div>`;
+  d.innerHTML=`<button class="star" title="Add to My TV">${favorites.has(c.id)?"★":"☆"}</button><button class="share-channel" title="Share channel" aria-label="Share ${esc(c.name)}">↗</button>${l?`<img class="logo" src="${esc(l)}" onerror="this.outerHTML='<div class=\\'logo-fallback\\'>${esc(c.name[0]||"T")}</div>'">`:`<div class="logo-fallback">${esc(c.name[0]||"T")}</div>`}<div class="card-info"><div class="channel-name">${esc(c.name)}</div><div class="meta">${esc(cn)} · ${esc(cat)}</div></div>`;
   d.onclick=()=>play(c.id);
+  d.querySelector(".share-channel").onclick=async e=>{
+    e.stopPropagation();
+    const url=channelUrl(c.id);
+    try {
+      if (navigator.share) await navigator.share({title:`Watch ${c.name} on World TV`,url});
+      else if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+        const btn=e.currentTarget, old=btn.textContent;
+        btn.textContent="✓";
+        setTimeout(()=>btn.textContent=old,1400);
+      } else {
+        window.prompt("Copy this channel link:",url);
+      }
+    } catch(err) {
+      if (err.name !== "AbortError") window.prompt("Copy this channel link:",url);
+    }
+  };
   d.querySelector(".star").onclick=e=>{
     e.stopPropagation();
     favorites.has(c.id)?favorites.delete(c.id):favorites.add(c.id);
@@ -116,6 +146,7 @@ function stop(){if(hls){hls.destroy();hls=null}el.video.pause();el.video.removeA
 
 async function play(id){
  selected=id;
+ updateChannelUrl(id);
  render();
  el.error.classList.add("hidden");
  el.overlay.style.display="none";
@@ -170,6 +201,12 @@ async function init(){
   channels=c.filter(x=>!x.closed);s.forEach(x=>{if(x.channel&&x.url){if(!streams.has(x.channel))streams.set(x.channel,[]);streams.get(x.channel).push(x)}});
   l.forEach(x=>{if(x.channel){if(!logos.has(x.channel))logos.set(x.channel,[]);logos.get(x.channel).push(x)}});
   co.forEach(x=>countries.set(x.code,x));ca.forEach(x=>cats.set(x.id,x));populate();render();
+
+  // If the page was opened from a shared channel URL, open that channel directly.
+  const sharedChannelId = new URLSearchParams(window.location.search).get("channel");
+  if (sharedChannelId && channels.some(x => x.id === sharedChannelId)) {
+    await play(sharedChannelId);
+  }
  }catch(e){el.grid.innerHTML='<div class="loading">Unable to load IPTV data. Check your connection and refresh.</div>'}
 }
 

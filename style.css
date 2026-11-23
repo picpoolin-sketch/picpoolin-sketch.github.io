@@ -5,3 +5,6 @@
 .player-section.pip{position:fixed;bottom:20px;right:20px;width:340px;z-index:1000;margin:0;box-shadow:0 10px 30px rgba(0,0,0,.8);border:1px solid #333;animation:popIn .2s ease-out}.player-section.pip .section-head{height:35px;padding:0 10px;font-size:12px}@keyframes popIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
 
 @media(max-width:750px){.topbar{gap:14px;padding:0 3%}.topbar nav{display:none}.top-actions input{width:145px}.hero{height:330px}.hero-content{padding:80px 5%}.hero h1{font-size:38px}.player-section,.controls,.row-title,.channel-grid{margin-left:3%;margin-right:3%}.channel-grid{grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:9px}.logo,.logo-fallback{height:82px}.player-section.pip{width:220px;bottom:10px;right:10px}}
+/* Per-channel share action */
+.channel .share-channel{position:absolute;right:43px;top:7px;border:0;background:rgba(0,0,0,.72);color:#fff;border-radius:5px;width:29px;height:29px;cursor:pointer;font-size:17px;line-height:1}
+.channel .share-channel:hover{background:var(--red);color:#fff}
